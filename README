@@ -1,0 +1,25 @@
+Ruby ASPSMS -- aspsms.com short message service gateway library and client
+http://www.roe.ch/ASPSMS
+
+Ruby ASPSMS is both a ruby library and a command line client for painfree,
+UNIX-style interaction with the aspsms.com short message gateways.
+
+Written to conform with the ASPSMS XML Interface Specs 1.91, 2007-12-05.
+-   Support for text SMS, show credits, and originator unlocking/testing.
+-   Conforms to ASPSMS failure safety recommendations.
+-   Delivery status notification is supported by the low-level library
+    but not exposed in the easy API nor the command line client.
+
+Configuration is read from ~/.aspsms or [/usr/local]/etc/aspsms by default:
+
+    # ASPSMS configuration
+    # mandatory options:
+    userkey XYZXYZXYZXYZ
+    password y0UrPasSw0rD
+    # optional default originator:
+    originator +41XXXXXXXXX
+    # optional gateway override:
+    gateway othergateway:port
+
+Make sure to set sensible permissions (0600 is a good start).
+
