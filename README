@@ -1,6 +1,9 @@
 Ruby ASPSMS -- aspsms.com short message service gateway library and client
 http://www.roe.ch/ASPSMS
 
+Copyright (C) 2005-2011, Daniel Roethlisberger <daniel@roe.ch>
+All rights reserved.
+
 Ruby ASPSMS is both a ruby library and a command line client for painfree,
 UNIX-style interaction with the aspsms.com short message gateways.
 
