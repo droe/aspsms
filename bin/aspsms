@@ -34,8 +34,8 @@ class String
   end
 end
 
-
 $bn = File.basename($0)
+
 def usage
   puts <<EOF
 Usage:
@@ -59,6 +59,7 @@ Parameters:
 Recipient phone number format: international format, e.g. +41XXXXXXXXX
 EOF
 end
+
 def die(reason, detail = nil)
   STDERR.print "#{$0}: #{reason}"
   STDERR.puts detail.nil? ? '' : " -- #{detail}"

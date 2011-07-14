@@ -46,6 +46,7 @@ module ASPSMS
     end
 
     @password, @userkey, @originator, @gateway, @charset = nil,nil,nil,nil,nil
+
     def initialize(confdata)
       if confdata.kind_of?(Hash)
         set(confdata)
@@ -63,6 +64,7 @@ module ASPSMS
         @http_class = Net::HTTP
       end
     end
+
     def autoload
       FILES.each do |fn|
         begin
@@ -74,6 +76,7 @@ module ASPSMS
         raise "No configuration file found (#{FILES.join(' ')})"
       end
     end
+
     def load(fn)
       conf = {}
       File.open(fn).each do |line|
@@ -94,6 +97,7 @@ module ASPSMS
       end
       set(conf)
     end
+
     def set(conf)
       @password   = conf[:password]   if conf.has_key?(:password)
       @userkey    = conf[:userkey]    if conf.has_key?(:userkey)
@@ -106,15 +110,19 @@ module ASPSMS
         raise "#{fn}: 'gateway' not in format 'host:port'!"
       end
     end
+
     def userkey
       @userkey
     end
+
     def password
       @password
     end
+
     def originator
       @originator.nil? ? 'aspsms' : @originator
     end
+
     def gateways
       if @gateway.nil?
         return [ 'xml1.aspsms.com:5061', 'xml2.aspsms.com:5098',
@@ -123,12 +131,15 @@ module ASPSMS
         return [ @gateway ]
       end
     end
+
     def useragent
       "ASPSMS::Gateway (http://www.roe.ch/ASPSMS)"
     end
+
     def http_class
       @http_class
     end
+
     def utf8(str)
       unless @charset.match(/utf-?8/i)
         return Iconv::iconv('utf-8', @charset, str)[0]
@@ -143,12 +154,15 @@ module ASPSMS
   class Request
     class Abstract
       include REXML
+
       attr_accessor :userkey, :password
+
       def initialize(cfg)
         @cfg = cfg
         @userkey = @cfg.userkey
         @password = @cfg.password
       end
+
       def to_s
         doc = Document.new
         doc << REXML::XMLDecl.new('1.0', 'ISO-8859-1')
@@ -166,6 +180,7 @@ module ASPSMS
         doc.to_s
       end
     end
+
     class SendTextSMS < Abstract
       attr_accessor :originator, :recipients, :text, :flashing, :blinking,
                     :tx_refs, :url_buffered, :url_nondelivery, :url_delivery
@@ -205,16 +220,19 @@ module ASPSMS
             add_text(@cfg.utf8(url_nondelivery)) unless url_nondelivery.empty?
       end
     end
+
     class SendOriginatorUnlockCode < Abstract
       attr_accessor :originator
       def initialize(cfg)
         super(cfg)
         @originator = @cfg.originator
       end
+
       def each_element
         yield REXML::Element.new('Originator').add_text(@cfg.utf8(originator))
       end
     end
+
     class UnlockOriginator < Abstract
       attr_accessor :originator, :code
       def initialize(cfg)
@@ -222,6 +240,7 @@ module ASPSMS
         @originator = @cfg.originator
         @code = ''
       end
+
       def each_element
         yield REXML::Element.new('Originator').
           add_text(@cfg.utf8(originator))
@@ -229,20 +248,24 @@ module ASPSMS
           add_text(@cfg.utf8(code))
       end
     end
+
     class CheckOriginatorAuthorization < Abstract
       attr_accessor :originator
       def initialize(cfg)
         super(cfg)
         @originator = @cfg.originator
       end
+
       def each_element
         yield REXML::Element.new('Originator').add_text(@cfg.utf8(originator))
       end
     end
+
     class ShowCredits < Abstract
       def initialize(cfg)
         super(cfg)
       end
+
       def each_element
         # no additional elements
       end
@@ -263,6 +286,7 @@ module ASPSMS
       raise "'ErrorDescription' missing!" if args['ErrorDescription'].nil?
       Response.new(cfg, args)
     end
+
     def initialize(cfg, args)
       @cfg = cfg
       @args = args
@@ -273,21 +297,27 @@ module ASPSMS
     def success?
       ['1', '30', '31'].include?(errno)
     end
+
     def authorized?
       errno == '31'
     end
+
     def errno
       @args['ErrorCode']
     end
+
     def errdesc
       @args['ErrorDescription']
     end
+
     def credits
       @args['Credits']
     end
+
     def credits_used
       @args['CreditsUsed']
     end
+
     def to_s
       "#{@args['ErrorCode']}: #{@args['ErrorDescription']} #{@args.inspect}"
     end
@@ -308,6 +338,7 @@ module ASPSMS
       end
       raise 'Failed to send request to gateways!'
     end
+
     def initialize(cfg, gw)
       @cfg = cfg
       if gw.match(/^(.*):([0-9]{1,5})$/)
@@ -315,6 +346,7 @@ module ASPSMS
       end
       @http = @cfg.http_class.new(host, port)
     end
+
     def send(req)
       headers = { 'User-Agent' => @cfg.useragent,
                   'Content-Type' => 'text/xml' }
@@ -329,12 +361,14 @@ module ASPSMS
     def initialize(conf = nil)
       @cfg = ASPSMS::Config.new(conf)
     end
+
     def show_credits
       request = ASPSMS::Request::ShowCredits.new(@cfg)
       response = ASPSMS::Gateway.send(@cfg, request)
       raise 'Error status from server!' unless response.success?
       response.credits
     end
+
     def send_text_sms(text, recipients, opts = {})
       request = ASPSMS::Request::SendTextSMS.new(@cfg)
       request.text       = text
@@ -346,6 +380,7 @@ module ASPSMS
       raise 'Error status from server!' unless response.success?
       response.credits_used
     end
+
     def send_originator_unlock_code(opts = {})
       request = ASPSMS::Request::SendOriginatorUnlockCode.new(@cfg)
       request.originator = opts[:originator] if opts.has_key?(:originator)
@@ -353,6 +388,7 @@ module ASPSMS
       raise 'Error status from server!' unless response.success?
       response
     end
+
     def unlock_originator(code, opts = {})
       request = ASPSMS::Request::UnlockOriginator.new(@cfg)
       request.code       = code
@@ -361,6 +397,7 @@ module ASPSMS
       raise 'Error status from server!' unless response.success?
       response
     end
+
     def check_originator_authorization(opts = {})
       request = ASPSMS::Request::CheckOriginatorAuthorization.new(@cfg)
       request.originator = opts[:originator] if opts.has_key?(:originator)
