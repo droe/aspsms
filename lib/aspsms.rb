@@ -31,7 +31,6 @@ require 'uri'
 require 'iconv'
 
 module ASPSMS
-  REVISION = '96'
   FILES = [ "#{ENV['HOME']}/.aspsms", '/etc/aspsms', '/usr/local/etc/aspsms' ]
   CHARSET = 'latin1'
 
@@ -125,7 +124,7 @@ module ASPSMS
       end
     end
     def useragent
-      "ASPSMS::Gateway/#{REVISION} (http://www.roe.ch/ASPSMS)"
+      "ASPSMS::Gateway (http://www.roe.ch/ASPSMS)"
     end
     def http_class
       @http_class
