@@ -14,4 +14,5 @@ spec = Gem::Specification.new do |s|
     'lib/aspsms.rb',
     'bin/aspsms',
   ]
+  s.executables = [ 'aspsms' ]
 end
