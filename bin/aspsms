@@ -93,7 +93,7 @@ begin
       usage
       exit 0
     when '-V'
-      puts "#{$bn}: Ruby ASPSMS r#{ASPSMS::REVISION}"
+      puts "#{$bn}: Ruby ASPSMS"
       puts "Copyright (C) 2005-2011, Daniel Roethlisberger <daniel@roe.ch>"
       puts "http://www.roe.ch/ASPSMS"
       exit 0
