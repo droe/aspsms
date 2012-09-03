@@ -73,8 +73,8 @@ module ASPSMS
         rescue Errno::ENOENT
           # ignore if not found
         end
-        raise "No configuration file found (#{FILES.join(' ')})"
       end
+      raise "No configuration file found (#{FILES.join(' ')})"
     end
 
     def load(fn)
