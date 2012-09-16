@@ -94,7 +94,7 @@ begin
       exit 0
     when '-V'
       puts "#{$bn}: Ruby ASPSMS"
-      puts "Copyright (C) 2005-2011, Daniel Roethlisberger <daniel@roe.ch>"
+      puts "Copyright (C) 2005-2012, Daniel Roethlisberger <daniel@roe.ch>"
       puts "http://www.roe.ch/ASPSMS"
       exit 0
     when '-M'
