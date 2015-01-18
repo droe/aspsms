@@ -28,21 +28,21 @@
 require 'rexml/document'
 require 'net/http'
 require 'uri'
-require 'iconv'
 
 module ASPSMS
   FILES = [ "#{ENV['HOME']}/.aspsms", '/etc/aspsms', '/usr/local/etc/aspsms' ]
-  CHARSET = 'latin1'
 
   # Represents a configuration, file based or hash based.
   class Config
+    # Determine the charset to convert from for stdin or argv from the locale;
+    # if unset, default to UTF-8, which is compatible with 7 bit ASCII.
     def self.charset_from_environment
       ['LC_ALL', 'LC_CTYPE', 'LANG'].each do |key|
         if ENV.has_key?(key)
-          return ENV[key].match(/\./) ? ENV[key].sub(/^.*\./, '') : CHARSET
+          return ENV[key].match(/\./) ? ENV[key].sub(/^.*\./, '') : 'utf-8'
         end
       end
-      return CHARSET
+      return 'utf-8'
     end
 
     @password, @userkey, @originator, @gateway, @charset = nil,nil,nil,nil,nil
@@ -141,8 +141,11 @@ module ASPSMS
     end
 
     def utf8(str)
-      unless @charset.match(/utf-?8/i)
-        return Iconv::iconv('utf-8', @charset, str)[0]
+      unless @charset.match(/^UTF-?8$/i)
+        return str.encode('UTF-8', @charset, {
+          :invalid => :replace,
+          :undef => :replace,
+          :replace => "?"})
       else
         return str
       end

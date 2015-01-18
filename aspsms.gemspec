@@ -1,8 +1,8 @@
 # vim: set et ts=2 sw=2 ft=ruby:
 spec = Gem::Specification.new do |s|
   s.name = 'aspsms'
-  s.version = '0.98'
-  s.date = '2012-09-16'
+  s.version = '0.99'
+  s.date = '2015-01-18'
   s.homepage = 'http://www.roe.ch/ASPSMS'
   s.authors = [ 'Daniel Roethlisberger' ]
   s.email = 'daniel@roe.ch'
@@ -15,4 +15,5 @@ spec = Gem::Specification.new do |s|
     'bin/aspsms',
   ]
   s.executables = [ 'aspsms' ]
+  s.required_ruby_version = '>= 1.9'
 end
