@@ -4,7 +4,7 @@
 # Ruby ASPSMS -- aspsms.com short message service gateway library and client
 # http://www.roe.ch/ASPSMS
 #
-# Copyright (C) 2005-2012, Daniel Roethlisberger <daniel@roe.ch>
+# Copyright (C) 2005-2015, Daniel Roethlisberger <daniel@roe.ch>
 # All rights reserved.
 #
 # Redistribution and use, with or without modification, are permitted
